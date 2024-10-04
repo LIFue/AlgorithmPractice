@@ -35,7 +35,7 @@ func (heap *Heap[T]) DownardAdjust(parent int) {
 	}
 }
 
-// 堆的基础操作之一：向下调整
+// 堆的基础操作之一：向上调整
 func (heap *Heap[T]) UpwardAdjust(child int) {
 	if child == 0 || child >= len(heap.arr) {
 		return
@@ -94,4 +94,22 @@ func (heap *Heap[T]) Pop() T {
 
 func (heap Heap[T]) Size() int {
 	return len(heap.arr)
+}
+
+func (heap Heap[T]) Top() T {
+	if heap.Size() == 0 {
+		return 0
+	}
+	return heap.arr[0]
+}
+
+func (heap *Heap[T]) ReplaceTop(ele T) {
+	heap.arr[0] = ele
+	heap.DownardAdjust(0)
+}
+
+func (heap Heap[T]) GetAll() []T {
+	out := make([]T, len(heap.arr))
+	copy(out, heap.arr)
+	return out
 }

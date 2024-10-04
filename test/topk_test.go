@@ -128,8 +128,47 @@ func TestTopkByPartitionByRandList(t *testing.T) {
 		if small > int(listLen)-int(k) || small+equal < int(listLen)-int(k)+1 {
 			t.Errorf("\nlen(topk): %d, k: %d \n len(list): %d, list: %d\nsmall: %d, equal: %d\n listLen - k: %d, ", len(topK), k, len(arr), listLen, small, equal, listLen-k)
 			t.Fail()
-		} else {
-			t.Logf("pass")
+		}
+	}
+}
+
+func TestHeapTopkByPartitionByRandList(t *testing.T) {
+
+	for i := 0; i < 1000; i++ {
+		listLen := rand.Int31n(10000) + 1
+		k := rand.Int31n(listLen) + 1
+
+		// listLen := 20
+		// k := 10
+
+		arr := make([]int32, listLen)
+		for j := 0; j < int(listLen); j++ {
+			arr[j] = rand.Int31() - 5000
+		}
+
+		topK := algorithm.TopkByHeap(arr, int(k))
+
+		min := topK[0]
+		for _, t := range topK {
+			if min > t {
+				min = t
+			}
+		}
+
+		small, equal := 0, 0
+		for _, ele := range arr {
+			if ele < min {
+				small++
+				continue
+			}
+			if ele == min {
+				equal++
+			}
+		}
+
+		if small > int(listLen)-int(k) || small+equal < int(listLen)-int(k)+1 {
+			t.Errorf("\nlen(topk): %d, k: %d \n len(list): %d, list: %d\nsmall: %d, equal: %d\n listLen - k: %d, ", len(topK), k, len(arr), listLen, small, equal, listLen-k)
+			t.Fail()
 		}
 	}
 }

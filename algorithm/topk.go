@@ -1,9 +1,7 @@
 package algorithm
 
-import "fmt"
-
 func TopkByPartition[T Comparable](arr []T, k int) []T {
-	fmt.Println("start")
+	// fmt.Println("start")
 	result := make([]T, k)
 
 	temp := make([]T, len(arr))
@@ -61,4 +59,21 @@ func partition[T Comparable](arr []T, k int, result []T) {
 		copy(result[:], arr[pivot:])
 		partition[T](arr[:pivot], k-m, result[m:])
 	}
+}
+
+func TopkByHeap[T Comparable](arr []T, k int) []T {
+	if len(arr) <= k {
+		return arr
+	}
+
+	heap := NewHeap(arr[:k])
+	heap.Build()
+	for _, ele := range arr[k:] {
+		top := heap.Top()
+		if ele > top {
+			heap.ReplaceTop(ele)
+		}
+	}
+
+	return heap.GetAll()
 }
